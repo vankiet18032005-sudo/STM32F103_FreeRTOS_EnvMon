@@ -1,0 +1,433 @@
+ARM GAS  C:\Users\admin\AppData\Local\Temp\cci4kLx4.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"led.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.LED_Init,"ax",%progbits
+  18              		.align	1
+  19              		.global	LED_Init
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	LED_Init:
+  25              	.LFB65:
+  26              		.file 1 "Core/Src/led.c"
+   1:Core/Src/led.c **** /**
+   2:Core/Src/led.c ****   ******************************************************************************
+   3:Core/Src/led.c ****   * @file           : led.c
+   4:Core/Src/led.c ****   * @brief          : LED driver (PC13 Red, PB14 Green)
+   5:Core/Src/led.c ****   ******************************************************************************
+   6:Core/Src/led.c ****   */
+   7:Core/Src/led.c **** 
+   8:Core/Src/led.c **** #include "led.h"
+   9:Core/Src/led.c **** 
+  10:Core/Src/led.c **** #define LED_RED_PORT    GPIOC
+  11:Core/Src/led.c **** #define LED_RED_PIN     GPIO_PIN_13
+  12:Core/Src/led.c **** 
+  13:Core/Src/led.c **** #define LED_GREEN_PORT  GPIOB
+  14:Core/Src/led.c **** #define LED_GREEN_PIN   GPIO_PIN_14
+  15:Core/Src/led.c **** 
+  16:Core/Src/led.c **** /**
+  17:Core/Src/led.c ****   * @brief  Initialize LED GPIO pins and set default states (both OFF)
+  18:Core/Src/led.c ****   *         PC13: Red LED (Active LOW - SET=OFF, RESET=ON)
+  19:Core/Src/led.c ****   *         PB14: Green LED (Active HIGH - SET=ON, RESET=OFF)
+  20:Core/Src/led.c ****   */
+  21:Core/Src/led.c **** void LED_Init(void)
+  22:Core/Src/led.c **** {
+  27              		.loc 1 22 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 24
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 20
+  34              		.cfi_offset 4, -20
+  35              		.cfi_offset 5, -16
+  36              		.cfi_offset 6, -12
+ARM GAS  C:\Users\admin\AppData\Local\Temp\cci4kLx4.s 			page 2
+
+
+  37              		.cfi_offset 7, -8
+  38              		.cfi_offset 14, -4
+  39 0002 87B0     		sub	sp, sp, #28
+  40              	.LCFI1:
+  41              		.cfi_def_cfa_offset 48
+  23:Core/Src/led.c ****     __HAL_RCC_GPIOC_CLK_ENABLE();
+  42              		.loc 1 23 5 view .LVU1
+  43              	.LBB2:
+  44              		.loc 1 23 5 view .LVU2
+  45              		.loc 1 23 5 view .LVU3
+  46 0004 1F4B     		ldr	r3, .L3
+  47 0006 9A69     		ldr	r2, [r3, #24]
+  48 0008 42F01002 		orr	r2, r2, #16
+  49 000c 9A61     		str	r2, [r3, #24]
+  50              		.loc 1 23 5 view .LVU4
+  51 000e 9A69     		ldr	r2, [r3, #24]
+  52 0010 02F01002 		and	r2, r2, #16
+  53 0014 0092     		str	r2, [sp]
+  54              		.loc 1 23 5 view .LVU5
+  55 0016 009A     		ldr	r2, [sp]
+  56              	.LBE2:
+  57              		.loc 1 23 5 view .LVU6
+  24:Core/Src/led.c ****     __HAL_RCC_GPIOB_CLK_ENABLE();
+  58              		.loc 1 24 5 view .LVU7
+  59              	.LBB3:
+  60              		.loc 1 24 5 view .LVU8
+  61              		.loc 1 24 5 view .LVU9
+  62 0018 9A69     		ldr	r2, [r3, #24]
+  63 001a 42F00802 		orr	r2, r2, #8
+  64 001e 9A61     		str	r2, [r3, #24]
+  65              		.loc 1 24 5 view .LVU10
+  66 0020 9B69     		ldr	r3, [r3, #24]
+  67 0022 03F00803 		and	r3, r3, #8
+  68 0026 0193     		str	r3, [sp, #4]
+  69              		.loc 1 24 5 view .LVU11
+  70 0028 019B     		ldr	r3, [sp, #4]
+  71              	.LBE3:
+  72              		.loc 1 24 5 view .LVU12
+  25:Core/Src/led.c **** 
+  26:Core/Src/led.c ****     GPIO_InitTypeDef GPIO_InitStruct = {0};
+  73              		.loc 1 26 5 view .LVU13
+  74              		.loc 1 26 22 is_stmt 0 view .LVU14
+  75 002a 0024     		movs	r4, #0
+  76 002c 0294     		str	r4, [sp, #8]
+  77 002e 0394     		str	r4, [sp, #12]
+  78 0030 0494     		str	r4, [sp, #16]
+  79 0032 0594     		str	r4, [sp, #20]
+  27:Core/Src/led.c **** 
+  28:Core/Src/led.c ****     /* Configure PC13 (Red LED, active LOW, default OFF) */
+  29:Core/Src/led.c ****     HAL_GPIO_WritePin(LED_RED_PORT, LED_RED_PIN, GPIO_PIN_SET);
+  80              		.loc 1 29 5 is_stmt 1 view .LVU15
+  81 0034 144D     		ldr	r5, .L3+4
+  82 0036 0122     		movs	r2, #1
+  83 0038 4FF40051 		mov	r1, #8192
+  84 003c 2846     		mov	r0, r5
+  85 003e FFF7FEFF 		bl	HAL_GPIO_WritePin
+  86              	.LVL0:
+ARM GAS  C:\Users\admin\AppData\Local\Temp\cci4kLx4.s 			page 3
+
+
+  30:Core/Src/led.c ****     GPIO_InitStruct.Pin = LED_RED_PIN;
+  87              		.loc 1 30 5 view .LVU16
+  88              		.loc 1 30 25 is_stmt 0 view .LVU17
+  89 0042 4FF40053 		mov	r3, #8192
+  90 0046 0293     		str	r3, [sp, #8]
+  31:Core/Src/led.c ****     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  91              		.loc 1 31 5 is_stmt 1 view .LVU18
+  92              		.loc 1 31 26 is_stmt 0 view .LVU19
+  93 0048 0127     		movs	r7, #1
+  94 004a 0397     		str	r7, [sp, #12]
+  32:Core/Src/led.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+  95              		.loc 1 32 5 is_stmt 1 view .LVU20
+  96              		.loc 1 32 26 is_stmt 0 view .LVU21
+  97 004c 0494     		str	r4, [sp, #16]
+  33:Core/Src/led.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  98              		.loc 1 33 5 is_stmt 1 view .LVU22
+  99              		.loc 1 33 27 is_stmt 0 view .LVU23
+ 100 004e 0226     		movs	r6, #2
+ 101 0050 0596     		str	r6, [sp, #20]
+  34:Core/Src/led.c ****     HAL_GPIO_Init(LED_RED_PORT, &GPIO_InitStruct);
+ 102              		.loc 1 34 5 is_stmt 1 view .LVU24
+ 103 0052 02A9     		add	r1, sp, #8
+ 104 0054 2846     		mov	r0, r5
+ 105 0056 FFF7FEFF 		bl	HAL_GPIO_Init
+ 106              	.LVL1:
+  35:Core/Src/led.c **** 
+  36:Core/Src/led.c ****     /* Configure PB14 (Green LED, active HIGH, default OFF) */
+  37:Core/Src/led.c ****     HAL_GPIO_WritePin(LED_GREEN_PORT, LED_GREEN_PIN, GPIO_PIN_RESET);
+ 107              		.loc 1 37 5 view .LVU25
+ 108 005a A5F58065 		sub	r5, r5, #1024
+ 109 005e 2246     		mov	r2, r4
+ 110 0060 4FF48041 		mov	r1, #16384
+ 111 0064 2846     		mov	r0, r5
+ 112 0066 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 113              	.LVL2:
+  38:Core/Src/led.c ****     GPIO_InitStruct.Pin = LED_GREEN_PIN;
+ 114              		.loc 1 38 5 view .LVU26
+ 115              		.loc 1 38 25 is_stmt 0 view .LVU27
+ 116 006a 4FF48043 		mov	r3, #16384
+ 117 006e 0293     		str	r3, [sp, #8]
+  39:Core/Src/led.c ****     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+ 118              		.loc 1 39 5 is_stmt 1 view .LVU28
+ 119              		.loc 1 39 26 is_stmt 0 view .LVU29
+ 120 0070 0397     		str	r7, [sp, #12]
+  40:Core/Src/led.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 121              		.loc 1 40 5 is_stmt 1 view .LVU30
+ 122              		.loc 1 40 26 is_stmt 0 view .LVU31
+ 123 0072 0494     		str	r4, [sp, #16]
+  41:Core/Src/led.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 124              		.loc 1 41 5 is_stmt 1 view .LVU32
+ 125              		.loc 1 41 27 is_stmt 0 view .LVU33
+ 126 0074 0596     		str	r6, [sp, #20]
+  42:Core/Src/led.c ****     HAL_GPIO_Init(LED_GREEN_PORT, &GPIO_InitStruct);
+ 127              		.loc 1 42 5 is_stmt 1 view .LVU34
+ 128 0076 02A9     		add	r1, sp, #8
+ 129 0078 2846     		mov	r0, r5
+ 130 007a FFF7FEFF 		bl	HAL_GPIO_Init
+ARM GAS  C:\Users\admin\AppData\Local\Temp\cci4kLx4.s 			page 4
+
+
+ 131              	.LVL3:
+  43:Core/Src/led.c **** }
+ 132              		.loc 1 43 1 is_stmt 0 view .LVU35
+ 133 007e 07B0     		add	sp, sp, #28
+ 134              	.LCFI2:
+ 135              		.cfi_def_cfa_offset 20
+ 136              		@ sp needed
+ 137 0080 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 138              	.L4:
+ 139 0082 00BF     		.align	2
+ 140              	.L3:
+ 141 0084 00100240 		.word	1073876992
+ 142 0088 00100140 		.word	1073811456
+ 143              		.cfi_endproc
+ 144              	.LFE65:
+ 146              		.section	.text.LED_Green_Toggle,"ax",%progbits
+ 147              		.align	1
+ 148              		.global	LED_Green_Toggle
+ 149              		.syntax unified
+ 150              		.thumb
+ 151              		.thumb_func
+ 153              	LED_Green_Toggle:
+ 154              	.LFB66:
+  44:Core/Src/led.c **** 
+  45:Core/Src/led.c **** /**
+  46:Core/Src/led.c ****   * @brief  Toggle Green LED (PB14)
+  47:Core/Src/led.c ****   */
+  48:Core/Src/led.c **** void LED_Green_Toggle(void)
+  49:Core/Src/led.c **** {
+ 155              		.loc 1 49 1 is_stmt 1 view -0
+ 156              		.cfi_startproc
+ 157              		@ args = 0, pretend = 0, frame = 0
+ 158              		@ frame_needed = 0, uses_anonymous_args = 0
+ 159 0000 08B5     		push	{r3, lr}
+ 160              	.LCFI3:
+ 161              		.cfi_def_cfa_offset 8
+ 162              		.cfi_offset 3, -8
+ 163              		.cfi_offset 14, -4
+  50:Core/Src/led.c ****     HAL_GPIO_TogglePin(LED_GREEN_PORT, LED_GREEN_PIN);
+ 164              		.loc 1 50 5 view .LVU37
+ 165 0002 4FF48041 		mov	r1, #16384
+ 166 0006 0248     		ldr	r0, .L7
+ 167 0008 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 168              	.LVL4:
+  51:Core/Src/led.c **** }
+ 169              		.loc 1 51 1 is_stmt 0 view .LVU38
+ 170 000c 08BD     		pop	{r3, pc}
+ 171              	.L8:
+ 172 000e 00BF     		.align	2
+ 173              	.L7:
+ 174 0010 000C0140 		.word	1073810432
+ 175              		.cfi_endproc
+ 176              	.LFE66:
+ 178              		.section	.text.LED_Red_Toggle,"ax",%progbits
+ 179              		.align	1
+ 180              		.global	LED_Red_Toggle
+ 181              		.syntax unified
+ARM GAS  C:\Users\admin\AppData\Local\Temp\cci4kLx4.s 			page 5
+
+
+ 182              		.thumb
+ 183              		.thumb_func
+ 185              	LED_Red_Toggle:
+ 186              	.LFB67:
+  52:Core/Src/led.c **** 
+  53:Core/Src/led.c **** /**
+  54:Core/Src/led.c ****   * @brief  Toggle Red LED (PC13)
+  55:Core/Src/led.c ****   */
+  56:Core/Src/led.c **** void LED_Red_Toggle(void)
+  57:Core/Src/led.c **** {
+ 187              		.loc 1 57 1 is_stmt 1 view -0
+ 188              		.cfi_startproc
+ 189              		@ args = 0, pretend = 0, frame = 0
+ 190              		@ frame_needed = 0, uses_anonymous_args = 0
+ 191 0000 08B5     		push	{r3, lr}
+ 192              	.LCFI4:
+ 193              		.cfi_def_cfa_offset 8
+ 194              		.cfi_offset 3, -8
+ 195              		.cfi_offset 14, -4
+  58:Core/Src/led.c ****     HAL_GPIO_TogglePin(LED_RED_PORT, LED_RED_PIN);
+ 196              		.loc 1 58 5 view .LVU40
+ 197 0002 4FF40051 		mov	r1, #8192
+ 198 0006 0248     		ldr	r0, .L11
+ 199 0008 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 200              	.LVL5:
+  59:Core/Src/led.c **** }
+ 201              		.loc 1 59 1 is_stmt 0 view .LVU41
+ 202 000c 08BD     		pop	{r3, pc}
+ 203              	.L12:
+ 204 000e 00BF     		.align	2
+ 205              	.L11:
+ 206 0010 00100140 		.word	1073811456
+ 207              		.cfi_endproc
+ 208              	.LFE67:
+ 210              		.section	.text.LED_Red_On,"ax",%progbits
+ 211              		.align	1
+ 212              		.global	LED_Red_On
+ 213              		.syntax unified
+ 214              		.thumb
+ 215              		.thumb_func
+ 217              	LED_Red_On:
+ 218              	.LFB68:
+  60:Core/Src/led.c **** 
+  61:Core/Src/led.c **** /**
+  62:Core/Src/led.c ****   * @brief  Turn Red LED ON (active LOW: RESET)
+  63:Core/Src/led.c ****   */
+  64:Core/Src/led.c **** void LED_Red_On(void)
+  65:Core/Src/led.c **** {
+ 219              		.loc 1 65 1 is_stmt 1 view -0
+ 220              		.cfi_startproc
+ 221              		@ args = 0, pretend = 0, frame = 0
+ 222              		@ frame_needed = 0, uses_anonymous_args = 0
+ 223 0000 08B5     		push	{r3, lr}
+ 224              	.LCFI5:
+ 225              		.cfi_def_cfa_offset 8
+ 226              		.cfi_offset 3, -8
+ 227              		.cfi_offset 14, -4
+ARM GAS  C:\Users\admin\AppData\Local\Temp\cci4kLx4.s 			page 6
+
+
+  66:Core/Src/led.c ****     HAL_GPIO_WritePin(LED_RED_PORT, LED_RED_PIN, GPIO_PIN_RESET);
+ 228              		.loc 1 66 5 view .LVU43
+ 229 0002 0022     		movs	r2, #0
+ 230 0004 4FF40051 		mov	r1, #8192
+ 231 0008 0148     		ldr	r0, .L15
+ 232 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 233              	.LVL6:
+  67:Core/Src/led.c **** }
+ 234              		.loc 1 67 1 is_stmt 0 view .LVU44
+ 235 000e 08BD     		pop	{r3, pc}
+ 236              	.L16:
+ 237              		.align	2
+ 238              	.L15:
+ 239 0010 00100140 		.word	1073811456
+ 240              		.cfi_endproc
+ 241              	.LFE68:
+ 243              		.section	.text.LED_Red_Off,"ax",%progbits
+ 244              		.align	1
+ 245              		.global	LED_Red_Off
+ 246              		.syntax unified
+ 247              		.thumb
+ 248              		.thumb_func
+ 250              	LED_Red_Off:
+ 251              	.LFB69:
+  68:Core/Src/led.c **** 
+  69:Core/Src/led.c **** /**
+  70:Core/Src/led.c ****   * @brief  Turn Red LED OFF (active LOW: SET)
+  71:Core/Src/led.c ****   */
+  72:Core/Src/led.c **** void LED_Red_Off(void)
+  73:Core/Src/led.c **** {
+ 252              		.loc 1 73 1 is_stmt 1 view -0
+ 253              		.cfi_startproc
+ 254              		@ args = 0, pretend = 0, frame = 0
+ 255              		@ frame_needed = 0, uses_anonymous_args = 0
+ 256 0000 08B5     		push	{r3, lr}
+ 257              	.LCFI6:
+ 258              		.cfi_def_cfa_offset 8
+ 259              		.cfi_offset 3, -8
+ 260              		.cfi_offset 14, -4
+  74:Core/Src/led.c ****     HAL_GPIO_WritePin(LED_RED_PORT, LED_RED_PIN, GPIO_PIN_SET);
+ 261              		.loc 1 74 5 view .LVU46
+ 262 0002 0122     		movs	r2, #1
+ 263 0004 4FF40051 		mov	r1, #8192
+ 264 0008 0148     		ldr	r0, .L19
+ 265 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 266              	.LVL7:
+  75:Core/Src/led.c **** }
+ 267              		.loc 1 75 1 is_stmt 0 view .LVU47
+ 268 000e 08BD     		pop	{r3, pc}
+ 269              	.L20:
+ 270              		.align	2
+ 271              	.L19:
+ 272 0010 00100140 		.word	1073811456
+ 273              		.cfi_endproc
+ 274              	.LFE69:
+ 276              		.text
+ 277              	.Letext0:
+ARM GAS  C:\Users\admin\AppData\Local\Temp\cci4kLx4.s 			page 7
+
+
+ 278              		.file 2 "c:\\st\\stm32cubeide_1.12.0\\stm32cubeide\\plugins\\com.st.stm32cube.ide.mcu.externaltool
+ 279              		.file 3 "c:\\st\\stm32cubeide_1.12.0\\stm32cubeide\\plugins\\com.st.stm32cube.ide.mcu.externaltool
+ 280              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 281              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ARM GAS  C:\Users\admin\AppData\Local\Temp\cci4kLx4.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 led.c
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:18     .text.LED_Init:0000000000000000 $t
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:24     .text.LED_Init:0000000000000000 LED_Init
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:141    .text.LED_Init:0000000000000084 $d
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:147    .text.LED_Green_Toggle:0000000000000000 $t
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:153    .text.LED_Green_Toggle:0000000000000000 LED_Green_Toggle
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:174    .text.LED_Green_Toggle:0000000000000010 $d
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:179    .text.LED_Red_Toggle:0000000000000000 $t
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:185    .text.LED_Red_Toggle:0000000000000000 LED_Red_Toggle
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:206    .text.LED_Red_Toggle:0000000000000010 $d
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:211    .text.LED_Red_On:0000000000000000 $t
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:217    .text.LED_Red_On:0000000000000000 LED_Red_On
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:239    .text.LED_Red_On:0000000000000010 $d
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:244    .text.LED_Red_Off:0000000000000000 $t
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:250    .text.LED_Red_Off:0000000000000000 LED_Red_Off
+C:\Users\admin\AppData\Local\Temp\cci4kLx4.s:272    .text.LED_Red_Off:0000000000000010 $d
+                           .group:0000000000000000 wm4.0.a3ff7b73ac8fc38854aebadf07793c4d
+                           .group:0000000000000000 wm4.stm32f1xx_hal_conf.h.22.102fbfd772f85ca0eb7d93240da00dfc
+                           .group:0000000000000000 wm4.stm32f1xx.h.38.953d9e9601c55b585f2853dd3f53fdde
+                           .group:0000000000000000 wm4.stm32f103xb.h.37.7c5fb130aa158ead5441dda9799c1941
+                           .group:0000000000000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:0000000000000000 wm4.features.h.33.318b64d71e0957639cfb30f1db1f7ec8
+                           .group:0000000000000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:0000000000000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:0000000000000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:0000000000000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:0000000000000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:0000000000000000 wm4.core_cm3.h.66.fc46cac19810db8f98d67da7ef88f42c
+                           .group:0000000000000000 wm4.cmsis_gcc.h.26.4f5798e999d5690b80e6ded3ecc94b37
+                           .group:0000000000000000 wm4.core_cm3.h.127.f4474120f1a7524deb56f9d74ff175da
+                           .group:0000000000000000 wm4.stm32f103xb.h.572.e8b8d889d857e2c56f82ca03c5328917
+                           .group:0000000000000000 wm4.stm32f1xx.h.161.0d1b9fd26c53008e1116394047fa1b84
+                           .group:0000000000000000 wm4.stm32_hal_legacy.h.22.738b126f6a0a0c726d412de79a56d7d7
+                           .group:0000000000000000 wm4.stddef.h.39.144cf5ddcd53cbfdac30259dc1a6c87f
+                           .group:0000000000000000 wm4.stm32f1xx_hal_def.h.56.354d0a4bf0f6ef7af10e3429b7628481
+                           .group:0000000000000000 wm4.stm32f1xx_hal_rcc.h.93.3fadb58bdef0723b74d9eb798753b168
+                           .group:0000000000000000 wm4.stm32f1xx_hal_rcc_ex.h.20.5a464c1dc9022dc2a67fe45b2054f77c
+                           .group:0000000000000000 wm4.stm32f1xx_hal_rcc.h.1200.d6cbb5717f01cee373a6e1fba84d9163
+                           .group:0000000000000000 wm4.stm32f1xx_hal_gpio.h.21.0099da253a68660e916195d3e8928be3
+                           .group:0000000000000000 wm4.stm32f1xx_hal_gpio_ex.h.21.93f1f3ec7660fa76375def81b976f73c
+                           .group:0000000000000000 wm4.stm32f1xx_hal_gpio.h.262.7df79220ec7519ba80c1763e6b4854a6
+                           .group:0000000000000000 wm4.stm32f1xx_hal_exti.h.21.a7f1b393a0c9b2b56b72ccdbb8dee508
+                           .group:0000000000000000 wm4.stm32f1xx_hal_dma.h.21.11e5a204ed6aa790b1cdae2e4192bc9d
+                           .group:0000000000000000 wm4.stm32f1xx_hal_dma_ex.h.21.d438f745b4c04dc23f9f569190526864
+                           .group:0000000000000000 wm4.stm32f1xx_hal_dma.h.408.14794a3f8621230c9ac7fca0cacf3e57
+                           .group:0000000000000000 wm4.stm32f1xx_hal_cortex.h.21.bc6672975c96f16c12a031ce09248d54
+                           .group:0000000000000000 wm4.stm32f1xx_hal_flash.h.20.2db7f614c43999568df8c1bd8d5f2459
+                           .group:0000000000000000 wm4.stm32f1xx_hal_flash_ex.h.20.c1d01fb364bcc8befd238a2d45469cc1
+                           .group:0000000000000000 wm4.stm32f1xx_hal_i2c.h.21.6a947c870feb456d84d10dd871ee01bd
+                           .group:0000000000000000 wm4.stm32f1xx_hal_iwdg.h.21.14afe1e30714751a311b81d0791714c2
+                           .group:0000000000000000 wm4.stm32f1xx_hal_pwr.h.21.ec3e2cfd4c26fffa32fc4ff0a8ac7390
+                           .group:0000000000000000 wm4.stm32f1xx_hal_tim.h.21.006a68e65b5f471fc08fe5e71aa2bc69
+                           .group:0000000000000000 wm4.stm32f1xx_hal_uart.h.21.96146ab5759dfe03d0cc100d79254944
+                           .group:0000000000000000 wm4.stm32f1xx_hal.h.87.60093b86a987865736d7cddecce3c235
+
+UNDEFINED SYMBOLS
+ARM GAS  C:\Users\admin\AppData\Local\Temp\cci4kLx4.s 			page 9
+
+
+HAL_GPIO_WritePin
+HAL_GPIO_Init
+HAL_GPIO_TogglePin

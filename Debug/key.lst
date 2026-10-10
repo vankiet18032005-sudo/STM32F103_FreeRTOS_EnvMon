@@ -1,0 +1,349 @@
+ARM GAS  C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"key.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.KEY_Scan,"ax",%progbits
+  18              		.align	1
+  19              		.global	KEY_Scan
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	KEY_Scan:
+  25              	.LFB65:
+  26              		.file 1 "Core/Src/key.c"
+   1:Core/Src/key.c **** /**
+   2:Core/Src/key.c ****   ******************************************************************************
+   3:Core/Src/key.c ****   * @file           : key.c
+   4:Core/Src/key.c ****   * @brief          : Push button scanning driver with debounce
+   5:Core/Src/key.c ****   ******************************************************************************
+   6:Core/Src/key.c ****   */
+   7:Core/Src/key.c **** 
+   8:Core/Src/key.c **** #include "key.h"
+   9:Core/Src/key.c **** #include "global.h"
+  10:Core/Src/key.c **** #include "cmsis_os2.h"
+  11:Core/Src/key.c **** 
+  12:Core/Src/key.c **** extern osMessageQueueId_t xQueueKeyEventHandle;
+  13:Core/Src/key.c **** 
+  14:Core/Src/key.c **** static uint8_t key1_state = 0;
+  15:Core/Src/key.c **** static uint8_t key2_state = 0;
+  16:Core/Src/key.c **** static uint8_t key1_debounce = 0;
+  17:Core/Src/key.c **** static uint8_t key2_debounce = 0;
+  18:Core/Src/key.c **** 
+  19:Core/Src/key.c **** /**
+  20:Core/Src/key.c ****   * @brief  Scan push buttons PB12 and PB13 with software debouncing.
+  21:Core/Src/key.c ****   *         Pushes key events to xQueueKeyEventHandle on state transition.
+  22:Core/Src/key.c ****   */
+  23:Core/Src/key.c **** void KEY_Scan(void)
+  24:Core/Src/key.c **** {
+  27              		.loc 1 24 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 8
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31 0000 00B5     		push	{lr}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 4
+  34              		.cfi_offset 14, -4
+ARM GAS  C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s 			page 2
+
+
+  35 0002 83B0     		sub	sp, sp, #12
+  36              	.LCFI1:
+  37              		.cfi_def_cfa_offset 16
+  25:Core/Src/key.c ****     /* Key 1 on PB12 (active LOW, pull-up) */
+  26:Core/Src/key.c ****     if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET) {
+  38              		.loc 1 26 5 view .LVU1
+  39              		.loc 1 26 9 is_stmt 0 view .LVU2
+  40 0004 4FF48051 		mov	r1, #4096
+  41 0008 2848     		ldr	r0, .L11
+  42 000a FFF7FEFF 		bl	HAL_GPIO_ReadPin
+  43              	.LVL0:
+  44              		.loc 1 26 8 view .LVU3
+  45 000e E0B9     		cbnz	r0, .L2
+  27:Core/Src/key.c ****         if (key1_debounce < 3) {
+  46              		.loc 1 27 9 is_stmt 1 view .LVU4
+  47              		.loc 1 27 27 is_stmt 0 view .LVU5
+  48 0010 274B     		ldr	r3, .L11+4
+  49 0012 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  50              		.loc 1 27 12 view .LVU6
+  51 0014 022B     		cmp	r3, #2
+  52 0016 02D8     		bhi	.L3
+  28:Core/Src/key.c ****             key1_debounce++;
+  53              		.loc 1 28 13 is_stmt 1 view .LVU7
+  54              		.loc 1 28 26 is_stmt 0 view .LVU8
+  55 0018 0133     		adds	r3, r3, #1
+  56 001a 254A     		ldr	r2, .L11+4
+  57 001c 1370     		strb	r3, [r2]
+  58              	.L3:
+  29:Core/Src/key.c ****         }
+  30:Core/Src/key.c ****         if (key1_debounce >= 3 && key1_state == 0) {
+  59              		.loc 1 30 9 is_stmt 1 view .LVU9
+  60              		.loc 1 30 27 is_stmt 0 view .LVU10
+  61 001e 244B     		ldr	r3, .L11+4
+  62 0020 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  63              		.loc 1 30 12 view .LVU11
+  64 0022 022B     		cmp	r3, #2
+  65 0024 16D9     		bls	.L4
+  66              		.loc 1 30 46 discriminator 1 view .LVU12
+  67 0026 234B     		ldr	r3, .L11+8
+  68 0028 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  69              		.loc 1 30 32 discriminator 1 view .LVU13
+  70 002a 9BB9     		cbnz	r3, .L4
+  71              	.LBB2:
+  31:Core/Src/key.c ****             key1_state = 1;
+  72              		.loc 1 31 13 is_stmt 1 view .LVU14
+  73              		.loc 1 31 24 is_stmt 0 view .LVU15
+  74 002c 0123     		movs	r3, #1
+  75 002e 214A     		ldr	r2, .L11+8
+  76 0030 1370     		strb	r3, [r2]
+  32:Core/Src/key.c ****             KeyEvent_t event = KEY1_PRESSED;
+  77              		.loc 1 32 13 is_stmt 1 view .LVU16
+  78              		.loc 1 32 24 is_stmt 0 view .LVU17
+  79 0032 8DF80730 		strb	r3, [sp, #7]
+  33:Core/Src/key.c ****             if (xQueueKeyEventHandle != NULL) {
+  80              		.loc 1 33 13 is_stmt 1 view .LVU18
+  81              		.loc 1 33 38 is_stmt 0 view .LVU19
+  82 0036 204B     		ldr	r3, .L11+12
+ARM GAS  C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s 			page 3
+
+
+  83 0038 1868     		ldr	r0, [r3]
+  84              		.loc 1 33 16 view .LVU20
+  85 003a 58B1     		cbz	r0, .L4
+  34:Core/Src/key.c ****                 osMessageQueuePut(xQueueKeyEventHandle, &event, 0U, 0U);
+  86              		.loc 1 34 17 is_stmt 1 view .LVU21
+  87 003c 0023     		movs	r3, #0
+  88 003e 1A46     		mov	r2, r3
+  89 0040 0DF10701 		add	r1, sp, #7
+  90 0044 FFF7FEFF 		bl	osMessageQueuePut
+  91              	.LVL1:
+  92 0048 04E0     		b	.L4
+  93              	.L2:
+  94              	.LBE2:
+  35:Core/Src/key.c ****             }
+  36:Core/Src/key.c ****         }
+  37:Core/Src/key.c ****     } else {
+  38:Core/Src/key.c ****         key1_debounce = 0;
+  95              		.loc 1 38 9 view .LVU22
+  96              		.loc 1 38 23 is_stmt 0 view .LVU23
+  97 004a 0023     		movs	r3, #0
+  98 004c 184A     		ldr	r2, .L11+4
+  99 004e 1370     		strb	r3, [r2]
+  39:Core/Src/key.c ****         key1_state = 0;
+ 100              		.loc 1 39 9 is_stmt 1 view .LVU24
+ 101              		.loc 1 39 20 is_stmt 0 view .LVU25
+ 102 0050 184A     		ldr	r2, .L11+8
+ 103 0052 1370     		strb	r3, [r2]
+ 104              	.L4:
+  40:Core/Src/key.c ****     }
+  41:Core/Src/key.c **** 
+  42:Core/Src/key.c ****     /* Key 2 on PB13 (active LOW, pull-up) */
+  43:Core/Src/key.c ****     if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET) {
+ 105              		.loc 1 43 5 is_stmt 1 view .LVU26
+ 106              		.loc 1 43 9 is_stmt 0 view .LVU27
+ 107 0054 4FF40051 		mov	r1, #8192
+ 108 0058 1448     		ldr	r0, .L11
+ 109 005a FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 110              	.LVL2:
+ 111              		.loc 1 43 8 view .LVU28
+ 112 005e E8B9     		cbnz	r0, .L6
+  44:Core/Src/key.c ****         if (key2_debounce < 3) {
+ 113              		.loc 1 44 9 is_stmt 1 view .LVU29
+ 114              		.loc 1 44 27 is_stmt 0 view .LVU30
+ 115 0060 164B     		ldr	r3, .L11+16
+ 116 0062 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 117              		.loc 1 44 12 view .LVU31
+ 118 0064 022B     		cmp	r3, #2
+ 119 0066 02D8     		bhi	.L7
+  45:Core/Src/key.c ****             key2_debounce++;
+ 120              		.loc 1 45 13 is_stmt 1 view .LVU32
+ 121              		.loc 1 45 26 is_stmt 0 view .LVU33
+ 122 0068 0133     		adds	r3, r3, #1
+ 123 006a 144A     		ldr	r2, .L11+16
+ 124 006c 1370     		strb	r3, [r2]
+ 125              	.L7:
+  46:Core/Src/key.c ****         }
+  47:Core/Src/key.c ****         if (key2_debounce >= 3 && key2_state == 0) {
+ARM GAS  C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s 			page 4
+
+
+ 126              		.loc 1 47 9 is_stmt 1 view .LVU34
+ 127              		.loc 1 47 27 is_stmt 0 view .LVU35
+ 128 006e 134B     		ldr	r3, .L11+16
+ 129 0070 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 130              		.loc 1 47 12 view .LVU36
+ 131 0072 022B     		cmp	r3, #2
+ 132 0074 17D9     		bls	.L1
+ 133              		.loc 1 47 46 discriminator 1 view .LVU37
+ 134 0076 124B     		ldr	r3, .L11+20
+ 135 0078 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 136              		.loc 1 47 32 discriminator 1 view .LVU38
+ 137 007a A3B9     		cbnz	r3, .L1
+ 138              	.LBB3:
+  48:Core/Src/key.c ****             key2_state = 1;
+ 139              		.loc 1 48 13 is_stmt 1 view .LVU39
+ 140              		.loc 1 48 24 is_stmt 0 view .LVU40
+ 141 007c 104B     		ldr	r3, .L11+20
+ 142 007e 0122     		movs	r2, #1
+ 143 0080 1A70     		strb	r2, [r3]
+  49:Core/Src/key.c ****             KeyEvent_t event = KEY2_PRESSED;
+ 144              		.loc 1 49 13 is_stmt 1 view .LVU41
+ 145              		.loc 1 49 24 is_stmt 0 view .LVU42
+ 146 0082 0223     		movs	r3, #2
+ 147 0084 8DF80730 		strb	r3, [sp, #7]
+  50:Core/Src/key.c ****             if (xQueueKeyEventHandle != NULL) {
+ 148              		.loc 1 50 13 is_stmt 1 view .LVU43
+ 149              		.loc 1 50 38 is_stmt 0 view .LVU44
+ 150 0088 0B4B     		ldr	r3, .L11+12
+ 151 008a 1868     		ldr	r0, [r3]
+ 152              		.loc 1 50 16 view .LVU45
+ 153 008c 58B1     		cbz	r0, .L1
+  51:Core/Src/key.c ****                 osMessageQueuePut(xQueueKeyEventHandle, &event, 0U, 0U);
+ 154              		.loc 1 51 17 is_stmt 1 view .LVU46
+ 155 008e 0023     		movs	r3, #0
+ 156 0090 1A46     		mov	r2, r3
+ 157 0092 0DF10701 		add	r1, sp, #7
+ 158 0096 FFF7FEFF 		bl	osMessageQueuePut
+ 159              	.LVL3:
+ 160 009a 04E0     		b	.L1
+ 161              	.L6:
+ 162              	.LBE3:
+  52:Core/Src/key.c ****             }
+  53:Core/Src/key.c ****         }
+  54:Core/Src/key.c ****     } else {
+  55:Core/Src/key.c ****         key2_debounce = 0;
+ 163              		.loc 1 55 9 view .LVU47
+ 164              		.loc 1 55 23 is_stmt 0 view .LVU48
+ 165 009c 0023     		movs	r3, #0
+ 166 009e 074A     		ldr	r2, .L11+16
+ 167 00a0 1370     		strb	r3, [r2]
+  56:Core/Src/key.c ****         key2_state = 0;
+ 168              		.loc 1 56 9 is_stmt 1 view .LVU49
+ 169              		.loc 1 56 20 is_stmt 0 view .LVU50
+ 170 00a2 074A     		ldr	r2, .L11+20
+ 171 00a4 1370     		strb	r3, [r2]
+ 172              	.L1:
+  57:Core/Src/key.c ****     }
+ARM GAS  C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s 			page 5
+
+
+  58:Core/Src/key.c **** }
+ 173              		.loc 1 58 1 view .LVU51
+ 174 00a6 03B0     		add	sp, sp, #12
+ 175              	.LCFI2:
+ 176              		.cfi_def_cfa_offset 4
+ 177              		@ sp needed
+ 178 00a8 5DF804FB 		ldr	pc, [sp], #4
+ 179              	.L12:
+ 180              		.align	2
+ 181              	.L11:
+ 182 00ac 000C0140 		.word	1073810432
+ 183 00b0 00000000 		.word	.LANCHOR0
+ 184 00b4 00000000 		.word	.LANCHOR1
+ 185 00b8 00000000 		.word	xQueueKeyEventHandle
+ 186 00bc 00000000 		.word	.LANCHOR2
+ 187 00c0 00000000 		.word	.LANCHOR3
+ 188              		.cfi_endproc
+ 189              	.LFE65:
+ 191              		.section	.bss.key1_debounce,"aw",%nobits
+ 192              		.set	.LANCHOR0,. + 0
+ 195              	key1_debounce:
+ 196 0000 00       		.space	1
+ 197              		.section	.bss.key1_state,"aw",%nobits
+ 198              		.set	.LANCHOR1,. + 0
+ 201              	key1_state:
+ 202 0000 00       		.space	1
+ 203              		.section	.bss.key2_debounce,"aw",%nobits
+ 204              		.set	.LANCHOR2,. + 0
+ 207              	key2_debounce:
+ 208 0000 00       		.space	1
+ 209              		.section	.bss.key2_state,"aw",%nobits
+ 210              		.set	.LANCHOR3,. + 0
+ 213              	key2_state:
+ 214 0000 00       		.space	1
+ 215              		.text
+ 216              	.Letext0:
+ 217              		.file 2 "c:\\st\\stm32cubeide_1.12.0\\stm32cubeide\\plugins\\com.st.stm32cube.ide.mcu.externaltool
+ 218              		.file 3 "c:\\st\\stm32cubeide_1.12.0\\stm32cubeide\\plugins\\com.st.stm32cube.ide.mcu.externaltool
+ 219              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 220              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 221              		.file 6 "Core/Inc/key.h"
+ 222              		.file 7 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 223              		.file 8 "Core/Inc/global.h"
+ARM GAS  C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 key.c
+C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s:18     .text.KEY_Scan:0000000000000000 $t
+C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s:24     .text.KEY_Scan:0000000000000000 KEY_Scan
+C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s:182    .text.KEY_Scan:00000000000000ac $d
+C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s:195    .bss.key1_debounce:0000000000000000 key1_debounce
+C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s:196    .bss.key1_debounce:0000000000000000 $d
+C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s:201    .bss.key1_state:0000000000000000 key1_state
+C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s:202    .bss.key1_state:0000000000000000 $d
+C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s:207    .bss.key2_debounce:0000000000000000 key2_debounce
+C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s:208    .bss.key2_debounce:0000000000000000 $d
+C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s:213    .bss.key2_state:0000000000000000 key2_state
+C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s:214    .bss.key2_state:0000000000000000 $d
+                           .group:0000000000000000 wm4.0.a3ff7b73ac8fc38854aebadf07793c4d
+                           .group:0000000000000000 wm4.stm32f1xx_hal_conf.h.22.102fbfd772f85ca0eb7d93240da00dfc
+                           .group:0000000000000000 wm4.stm32f1xx.h.38.953d9e9601c55b585f2853dd3f53fdde
+                           .group:0000000000000000 wm4.stm32f103xb.h.37.7c5fb130aa158ead5441dda9799c1941
+                           .group:0000000000000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:0000000000000000 wm4.features.h.33.318b64d71e0957639cfb30f1db1f7ec8
+                           .group:0000000000000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:0000000000000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:0000000000000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:0000000000000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:0000000000000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:0000000000000000 wm4.core_cm3.h.66.fc46cac19810db8f98d67da7ef88f42c
+                           .group:0000000000000000 wm4.cmsis_gcc.h.26.4f5798e999d5690b80e6ded3ecc94b37
+                           .group:0000000000000000 wm4.core_cm3.h.127.f4474120f1a7524deb56f9d74ff175da
+                           .group:0000000000000000 wm4.stm32f103xb.h.572.e8b8d889d857e2c56f82ca03c5328917
+                           .group:0000000000000000 wm4.stm32f1xx.h.161.0d1b9fd26c53008e1116394047fa1b84
+                           .group:0000000000000000 wm4.stm32_hal_legacy.h.22.738b126f6a0a0c726d412de79a56d7d7
+                           .group:0000000000000000 wm4.stddef.h.39.144cf5ddcd53cbfdac30259dc1a6c87f
+                           .group:0000000000000000 wm4.stm32f1xx_hal_def.h.56.354d0a4bf0f6ef7af10e3429b7628481
+                           .group:0000000000000000 wm4.stm32f1xx_hal_rcc.h.93.3fadb58bdef0723b74d9eb798753b168
+                           .group:0000000000000000 wm4.stm32f1xx_hal_rcc_ex.h.20.5a464c1dc9022dc2a67fe45b2054f77c
+                           .group:0000000000000000 wm4.stm32f1xx_hal_rcc.h.1200.d6cbb5717f01cee373a6e1fba84d9163
+                           .group:0000000000000000 wm4.stm32f1xx_hal_gpio.h.21.0099da253a68660e916195d3e8928be3
+                           .group:0000000000000000 wm4.stm32f1xx_hal_gpio_ex.h.21.93f1f3ec7660fa76375def81b976f73c
+                           .group:0000000000000000 wm4.stm32f1xx_hal_gpio.h.262.7df79220ec7519ba80c1763e6b4854a6
+                           .group:0000000000000000 wm4.stm32f1xx_hal_exti.h.21.a7f1b393a0c9b2b56b72ccdbb8dee508
+                           .group:0000000000000000 wm4.stm32f1xx_hal_dma.h.21.11e5a204ed6aa790b1cdae2e4192bc9d
+                           .group:0000000000000000 wm4.stm32f1xx_hal_dma_ex.h.21.d438f745b4c04dc23f9f569190526864
+                           .group:0000000000000000 wm4.stm32f1xx_hal_dma.h.408.14794a3f8621230c9ac7fca0cacf3e57
+                           .group:0000000000000000 wm4.stm32f1xx_hal_cortex.h.21.bc6672975c96f16c12a031ce09248d54
+                           .group:0000000000000000 wm4.stm32f1xx_hal_flash.h.20.2db7f614c43999568df8c1bd8d5f2459
+                           .group:0000000000000000 wm4.stm32f1xx_hal_flash_ex.h.20.c1d01fb364bcc8befd238a2d45469cc1
+                           .group:0000000000000000 wm4.stm32f1xx_hal_i2c.h.21.6a947c870feb456d84d10dd871ee01bd
+                           .group:0000000000000000 wm4.stm32f1xx_hal_iwdg.h.21.14afe1e30714751a311b81d0791714c2
+                           .group:0000000000000000 wm4.stm32f1xx_hal_pwr.h.21.ec3e2cfd4c26fffa32fc4ff0a8ac7390
+                           .group:0000000000000000 wm4.stm32f1xx_hal_tim.h.21.006a68e65b5f471fc08fe5e71aa2bc69
+                           .group:0000000000000000 wm4.stm32f1xx_hal_uart.h.21.96146ab5759dfe03d0cc100d79254944
+                           .group:0000000000000000 wm4.stm32f1xx_hal.h.87.60093b86a987865736d7cddecce3c235
+                           .group:0000000000000000 wm4.cmsis_os2.h.151.57db232dfe421e4f781dd02c42ee4360
+
+UNDEFINED SYMBOLS
+HAL_GPIO_ReadPin
+osMessageQueuePut
+xQueueKeyEventHandle
+ARM GAS  C:\Users\admin\AppData\Local\Temp\ccK4LRN5.s 			page 7
+
+

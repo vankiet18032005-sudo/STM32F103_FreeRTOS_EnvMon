@@ -1,0 +1,290 @@
+ARM GAS  C:\Users\admin\AppData\Local\Temp\ccOyyZI5.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"debug.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.DEBUG_Log,"ax",%progbits
+  18              		.align	1
+  19              		.global	DEBUG_Log
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	DEBUG_Log:
+  25              	.LVL0:
+  26              	.LFB68:
+  27              		.file 1 "Core/Src/debug.c"
+   1:Core/Src/debug.c **** /**
+   2:Core/Src/debug.c ****   ******************************************************************************
+   3:Core/Src/debug.c ****   * @file           : debug.c
+   4:Core/Src/debug.c ****   * @brief          : UART debug log output and printf redirection
+   5:Core/Src/debug.c ****   ******************************************************************************
+   6:Core/Src/debug.c ****   */
+   7:Core/Src/debug.c **** 
+   8:Core/Src/debug.c **** #include "debug.h"
+   9:Core/Src/debug.c **** #include <stdarg.h>
+  10:Core/Src/debug.c **** #include <stdio.h>
+  11:Core/Src/debug.c **** #include <string.h>
+  12:Core/Src/debug.c **** 
+  13:Core/Src/debug.c **** extern UART_HandleTypeDef huart1;
+  14:Core/Src/debug.c **** 
+  15:Core/Src/debug.c **** /**
+  16:Core/Src/debug.c ****   * @brief  Transmit formatted debug string over UART1
+  17:Core/Src/debug.c ****   * @param  format: Format string
+  18:Core/Src/debug.c ****   * @param  ...: Variable arguments
+  19:Core/Src/debug.c ****   */
+  20:Core/Src/debug.c **** void DEBUG_Log(const char *format, ...)
+  21:Core/Src/debug.c **** {
+  28              		.loc 1 21 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 4, pretend = 16, frame = 136
+  31              		@ frame_needed = 0, uses_anonymous_args = 1
+  32              		.loc 1 21 1 is_stmt 0 view .LVU1
+  33 0000 0FB4     		push	{r0, r1, r2, r3}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 16
+  36              		.cfi_offset 0, -16
+  37              		.cfi_offset 1, -12
+ARM GAS  C:\Users\admin\AppData\Local\Temp\ccOyyZI5.s 			page 2
+
+
+  38              		.cfi_offset 2, -8
+  39              		.cfi_offset 3, -4
+  40 0002 00B5     		push	{lr}
+  41              	.LCFI1:
+  42              		.cfi_def_cfa_offset 20
+  43              		.cfi_offset 14, -20
+  44 0004 A3B0     		sub	sp, sp, #140
+  45              	.LCFI2:
+  46              		.cfi_def_cfa_offset 160
+  47 0006 24AB     		add	r3, sp, #144
+  48 0008 53F8042B 		ldr	r2, [r3], #4
+  22:Core/Src/debug.c ****     char buffer[128];
+  49              		.loc 1 22 5 is_stmt 1 view .LVU2
+  23:Core/Src/debug.c ****     va_list args;
+  50              		.loc 1 23 5 view .LVU3
+  24:Core/Src/debug.c **** 
+  25:Core/Src/debug.c ****     va_start(args, format);
+  51              		.loc 1 25 5 view .LVU4
+  52 000c 0193     		str	r3, [sp, #4]
+  26:Core/Src/debug.c ****     vsnprintf(buffer, sizeof(buffer), format, args);
+  53              		.loc 1 26 5 view .LVU5
+  54 000e 8021     		movs	r1, #128
+  55 0010 02A8     		add	r0, sp, #8
+  56 0012 FFF7FEFF 		bl	vsnprintf
+  57              	.LVL1:
+  27:Core/Src/debug.c ****     va_end(args);
+  58              		.loc 1 27 5 view .LVU6
+  28:Core/Src/debug.c **** 
+  29:Core/Src/debug.c ****     HAL_UART_Transmit(&huart1, (uint8_t *)buffer, (uint16_t)strlen(buffer), 100);
+  59              		.loc 1 29 5 view .LVU7
+  60              		.loc 1 29 61 is_stmt 0 view .LVU8
+  61 0016 02A8     		add	r0, sp, #8
+  62 0018 FFF7FEFF 		bl	strlen
+  63              	.LVL2:
+  64              		.loc 1 29 5 view .LVU9
+  65 001c 6423     		movs	r3, #100
+  66 001e 82B2     		uxth	r2, r0
+  67 0020 02A9     		add	r1, sp, #8
+  68 0022 0448     		ldr	r0, .L3
+  69 0024 FFF7FEFF 		bl	HAL_UART_Transmit
+  70              	.LVL3:
+  30:Core/Src/debug.c **** }
+  71              		.loc 1 30 1 view .LVU10
+  72 0028 23B0     		add	sp, sp, #140
+  73              	.LCFI3:
+  74              		.cfi_def_cfa_offset 20
+  75              		@ sp needed
+  76 002a 5DF804EB 		ldr	lr, [sp], #4
+  77              	.LCFI4:
+  78              		.cfi_restore 14
+  79              		.cfi_def_cfa_offset 16
+  80 002e 04B0     		add	sp, sp, #16
+  81              	.LCFI5:
+  82              		.cfi_restore 3
+  83              		.cfi_restore 2
+  84              		.cfi_restore 1
+  85              		.cfi_restore 0
+ARM GAS  C:\Users\admin\AppData\Local\Temp\ccOyyZI5.s 			page 3
+
+
+  86              		.cfi_def_cfa_offset 0
+  87 0030 7047     		bx	lr
+  88              	.L4:
+  89 0032 00BF     		.align	2
+  90              	.L3:
+  91 0034 00000000 		.word	huart1
+  92              		.cfi_endproc
+  93              	.LFE68:
+  95              		.section	.text.__io_putchar,"ax",%progbits
+  96              		.align	1
+  97              		.global	__io_putchar
+  98              		.syntax unified
+  99              		.thumb
+ 100              		.thumb_func
+ 102              	__io_putchar:
+ 103              	.LVL4:
+ 104              	.LFB69:
+  31:Core/Src/debug.c **** 
+  32:Core/Src/debug.c **** /**
+  33:Core/Src/debug.c ****   * @brief  Retargets the C library printf function to the USART.
+  34:Core/Src/debug.c ****   * @param  ch: Character to send
+  35:Core/Src/debug.c ****   * @retval Character sent
+  36:Core/Src/debug.c ****   */
+  37:Core/Src/debug.c **** int __io_putchar(int ch)
+  38:Core/Src/debug.c **** {
+ 105              		.loc 1 38 1 is_stmt 1 view -0
+ 106              		.cfi_startproc
+ 107              		@ args = 0, pretend = 0, frame = 8
+ 108              		@ frame_needed = 0, uses_anonymous_args = 0
+ 109              		.loc 1 38 1 is_stmt 0 view .LVU12
+ 110 0000 00B5     		push	{lr}
+ 111              	.LCFI6:
+ 112              		.cfi_def_cfa_offset 4
+ 113              		.cfi_offset 14, -4
+ 114 0002 83B0     		sub	sp, sp, #12
+ 115              	.LCFI7:
+ 116              		.cfi_def_cfa_offset 16
+ 117 0004 0190     		str	r0, [sp, #4]
+  39:Core/Src/debug.c ****     HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 10);
+ 118              		.loc 1 39 5 is_stmt 1 view .LVU13
+ 119 0006 0A23     		movs	r3, #10
+ 120 0008 0122     		movs	r2, #1
+ 121 000a 01A9     		add	r1, sp, #4
+ 122 000c 0348     		ldr	r0, .L7
+ 123              	.LVL5:
+ 124              		.loc 1 39 5 is_stmt 0 view .LVU14
+ 125 000e FFF7FEFF 		bl	HAL_UART_Transmit
+ 126              	.LVL6:
+  40:Core/Src/debug.c ****     return ch;
+ 127              		.loc 1 40 5 is_stmt 1 view .LVU15
+  41:Core/Src/debug.c **** }
+ 128              		.loc 1 41 1 is_stmt 0 view .LVU16
+ 129 0012 0198     		ldr	r0, [sp, #4]
+ 130 0014 03B0     		add	sp, sp, #12
+ 131              	.LCFI8:
+ 132              		.cfi_def_cfa_offset 4
+ 133              		@ sp needed
+ARM GAS  C:\Users\admin\AppData\Local\Temp\ccOyyZI5.s 			page 4
+
+
+ 134 0016 5DF804FB 		ldr	pc, [sp], #4
+ 135              	.L8:
+ 136 001a 00BF     		.align	2
+ 137              	.L7:
+ 138 001c 00000000 		.word	huart1
+ 139              		.cfi_endproc
+ 140              	.LFE69:
+ 142              		.text
+ 143              	.Letext0:
+ 144              		.file 2 "c:\\st\\stm32cubeide_1.12.0\\stm32cubeide\\plugins\\com.st.stm32cube.ide.mcu.externaltool
+ 145              		.file 3 "c:\\st\\stm32cubeide_1.12.0\\stm32cubeide\\plugins\\com.st.stm32cube.ide.mcu.externaltool
+ 146              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 147              		.file 5 "c:\\st\\stm32cubeide_1.12.0\\stm32cubeide\\plugins\\com.st.stm32cube.ide.mcu.externaltool
+ 148              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 149              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 150              		.file 8 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h"
+ 151              		.file 9 "c:\\st\\stm32cubeide_1.12.0\\stm32cubeide\\plugins\\com.st.stm32cube.ide.mcu.externaltool
+ 152              		.file 10 "c:\\st\\stm32cubeide_1.12.0\\stm32cubeide\\plugins\\com.st.stm32cube.ide.mcu.externaltoo
+ 153              		.file 11 "c:\\st\\stm32cubeide_1.12.0\\stm32cubeide\\plugins\\com.st.stm32cube.ide.mcu.externaltoo
+ 154              		.file 12 "<built-in>"
+ARM GAS  C:\Users\admin\AppData\Local\Temp\ccOyyZI5.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 debug.c
+C:\Users\admin\AppData\Local\Temp\ccOyyZI5.s:18     .text.DEBUG_Log:0000000000000000 $t
+C:\Users\admin\AppData\Local\Temp\ccOyyZI5.s:24     .text.DEBUG_Log:0000000000000000 DEBUG_Log
+C:\Users\admin\AppData\Local\Temp\ccOyyZI5.s:91     .text.DEBUG_Log:0000000000000034 $d
+C:\Users\admin\AppData\Local\Temp\ccOyyZI5.s:96     .text.__io_putchar:0000000000000000 $t
+C:\Users\admin\AppData\Local\Temp\ccOyyZI5.s:102    .text.__io_putchar:0000000000000000 __io_putchar
+C:\Users\admin\AppData\Local\Temp\ccOyyZI5.s:138    .text.__io_putchar:000000000000001c $d
+                           .group:0000000000000000 wm4.0.a3ff7b73ac8fc38854aebadf07793c4d
+                           .group:0000000000000000 wm4.stm32f1xx_hal_conf.h.22.102fbfd772f85ca0eb7d93240da00dfc
+                           .group:0000000000000000 wm4.stm32f1xx.h.38.953d9e9601c55b585f2853dd3f53fdde
+                           .group:0000000000000000 wm4.stm32f103xb.h.37.7c5fb130aa158ead5441dda9799c1941
+                           .group:0000000000000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:0000000000000000 wm4.features.h.33.318b64d71e0957639cfb30f1db1f7ec8
+                           .group:0000000000000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:0000000000000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:0000000000000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:0000000000000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:0000000000000000 wm4.cmsis_version.h.32.4d5822004c01a829a975260e854b5f8e
+                           .group:0000000000000000 wm4.core_cm3.h.66.fc46cac19810db8f98d67da7ef88f42c
+                           .group:0000000000000000 wm4.cmsis_gcc.h.26.4f5798e999d5690b80e6ded3ecc94b37
+                           .group:0000000000000000 wm4.core_cm3.h.127.f4474120f1a7524deb56f9d74ff175da
+                           .group:0000000000000000 wm4.stm32f103xb.h.572.e8b8d889d857e2c56f82ca03c5328917
+                           .group:0000000000000000 wm4.stm32f1xx.h.161.0d1b9fd26c53008e1116394047fa1b84
+                           .group:0000000000000000 wm4.stm32_hal_legacy.h.22.738b126f6a0a0c726d412de79a56d7d7
+                           .group:0000000000000000 wm4.stddef.h.39.144cf5ddcd53cbfdac30259dc1a6c87f
+                           .group:0000000000000000 wm4.stm32f1xx_hal_def.h.56.354d0a4bf0f6ef7af10e3429b7628481
+                           .group:0000000000000000 wm4.stm32f1xx_hal_rcc.h.93.3fadb58bdef0723b74d9eb798753b168
+                           .group:0000000000000000 wm4.stm32f1xx_hal_rcc_ex.h.20.5a464c1dc9022dc2a67fe45b2054f77c
+                           .group:0000000000000000 wm4.stm32f1xx_hal_rcc.h.1200.d6cbb5717f01cee373a6e1fba84d9163
+                           .group:0000000000000000 wm4.stm32f1xx_hal_gpio.h.21.0099da253a68660e916195d3e8928be3
+                           .group:0000000000000000 wm4.stm32f1xx_hal_gpio_ex.h.21.93f1f3ec7660fa76375def81b976f73c
+                           .group:0000000000000000 wm4.stm32f1xx_hal_gpio.h.262.7df79220ec7519ba80c1763e6b4854a6
+                           .group:0000000000000000 wm4.stm32f1xx_hal_exti.h.21.a7f1b393a0c9b2b56b72ccdbb8dee508
+                           .group:0000000000000000 wm4.stm32f1xx_hal_dma.h.21.11e5a204ed6aa790b1cdae2e4192bc9d
+                           .group:0000000000000000 wm4.stm32f1xx_hal_dma_ex.h.21.d438f745b4c04dc23f9f569190526864
+                           .group:0000000000000000 wm4.stm32f1xx_hal_dma.h.408.14794a3f8621230c9ac7fca0cacf3e57
+                           .group:0000000000000000 wm4.stm32f1xx_hal_cortex.h.21.bc6672975c96f16c12a031ce09248d54
+                           .group:0000000000000000 wm4.stm32f1xx_hal_flash.h.20.2db7f614c43999568df8c1bd8d5f2459
+                           .group:0000000000000000 wm4.stm32f1xx_hal_flash_ex.h.20.c1d01fb364bcc8befd238a2d45469cc1
+                           .group:0000000000000000 wm4.stm32f1xx_hal_i2c.h.21.6a947c870feb456d84d10dd871ee01bd
+                           .group:0000000000000000 wm4.stm32f1xx_hal_iwdg.h.21.14afe1e30714751a311b81d0791714c2
+                           .group:0000000000000000 wm4.stm32f1xx_hal_pwr.h.21.ec3e2cfd4c26fffa32fc4ff0a8ac7390
+                           .group:0000000000000000 wm4.stm32f1xx_hal_tim.h.21.006a68e65b5f471fc08fe5e71aa2bc69
+                           .group:0000000000000000 wm4.stm32f1xx_hal_uart.h.21.96146ab5759dfe03d0cc100d79254944
+                           .group:0000000000000000 wm4.stm32f1xx_hal.h.87.60093b86a987865736d7cddecce3c235
+                           .group:0000000000000000 wm4.stdarg.h.31.b55da1089056868966f25de5dbfc7d3c
+                           .group:0000000000000000 wm4.newlib.h.8.4679f89e52c9f69cd44f3a27cd28c759
+                           .group:0000000000000000 wm4.ieeefp.h.77.25247dc27dbe3b23bfe98c2dc18f6ac5
+                           .group:0000000000000000 wm4.config.h.224.79362c3cdb280fe0b8d95bd0bc4d5c54
+                           .group:0000000000000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:0000000000000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:0000000000000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:0000000000000000 wm4.cdefs.h.49.39045112216f6a021dbdffe3bf5accce
+                           .group:0000000000000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:0000000000000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:0000000000000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+ARM GAS  C:\Users\admin\AppData\Local\Temp\ccOyyZI5.s 			page 6
+
+
+                           .group:0000000000000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:0000000000000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:0000000000000000 wm4.reent.h.77.32fd7d280fc2a40b0797abce5beaf6e3
+                           .group:0000000000000000 wm4.assert.h.11.db24e541f16414db224bf986d21017e2
+                           .group:0000000000000000 wm4.reent.h.504.40d20ade344680fbcb6a0178bf7ae09e
+                           .group:0000000000000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:0000000000000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:0000000000000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:0000000000000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:0000000000000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:0000000000000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:0000000000000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:0000000000000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:0000000000000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:0000000000000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:0000000000000000 wm4.stdio.h.81.60a2ded7dae310b81f9d6907fe5e3dbf
+                           .group:0000000000000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:0000000000000000 wm4.string.h.177.59a005921fa78485abc80a0267de5752
+
+UNDEFINED SYMBOLS
+vsnprintf
+strlen
+HAL_UART_Transmit
+huart1
